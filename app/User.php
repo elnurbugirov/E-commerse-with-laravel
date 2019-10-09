@@ -36,6 +36,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        // your other new column
+    ];
 
     public function role(){
         return $this->belongsTo('App\Role');
