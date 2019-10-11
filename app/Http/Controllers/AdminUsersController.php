@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostsCreateRequest;
 use App\Http\Requests\UsersEditRequest;
 use App\Http\Requests\UsersRequest;
 use App\Photo;
 use App\Role;
 use App\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
@@ -40,7 +42,7 @@ class AdminUsersController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UsersRequest $request)
+    public function store(PostsCreateRequest $request)
     {
         if(trim($request->password) == '') {
             $input = $request->except('password');
@@ -51,7 +53,6 @@ class AdminUsersController extends Controller
         }
         if ($file = $request->file('photo_id')) {
             $name = time() . $file->getClientOriginalName();
-
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
@@ -60,7 +61,7 @@ class AdminUsersController extends Controller
 
         User::create($input);
 
-//        return redirect('/admin/users');
+      return redirect('/admin/users');
     }
 
     /**
@@ -126,6 +127,14 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+            $user = User::findOrFail($id);
+
+            unlink(public_path()  . $user->photo->file);
+
+            $user->delete();
+
+            session()->flash('deleted_user','The user has been deleted');
+
+            return redirect('/admin/users');
     }
 }
