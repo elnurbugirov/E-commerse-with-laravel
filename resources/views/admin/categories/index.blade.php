@@ -32,7 +32,7 @@
                     @foreach($categories as $category)
                         <tr>
                             <td>{{$category->id}}</td>
-                            <td>{{$category->name}}</td>
+                            <td><a href="{{route('categories.edit', $category->id)}}">{{$category->name}}</a></td>
                             <td>{{$category->created_at ? \Carbon\Carbon::parse($category->created_at)->diffForHumans() : 'no date'}}</td>
                         </tr>
                     @endforeach
