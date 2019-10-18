@@ -12,8 +12,10 @@
             <th>Photo</th>
             <th>Title</th>
             <th>Body</th>
-            <th>Created</th>
-            <th>Updated</th>
+            <th>Post link</th>
+            <th>Comments</th>
+            <th>Created_at</th>
+            <th>Update</th>
         </tr>
         </thead>
         <tbody>
@@ -26,6 +28,8 @@
             <td><img height="50" src="{{$post->photo ? $post->photo->file : 'http://placehold.it/400x400'}}" alt=""> </td>
             <td>{{$post->title}}</td>
             <td>{{\Str::limit($post->body, 7)}}</td>
+            <td><a href="{{route('home.post',Str::slug($post->slug))}}">View Post</a></td>
+            <td><a href="{{route('comments.show',$post->id)}}">View Comments</a></td>
             <td>{{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</td>
             <td>{{\Carbon\Carbon::parse($post->updated_at)->diffForHumans()}}</td>
         </tr>
@@ -33,5 +37,11 @@
             @endif
         </tbody>
     </table>
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-5">
+
+            {{$posts->render()}}
+        </div>
+    </div>
 
     @stop
